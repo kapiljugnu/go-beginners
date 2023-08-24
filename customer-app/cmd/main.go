@@ -1,46 +1,25 @@
 package main
 
 import (
+	"fmt"
+	"net/http"
+
+	"github.com/gorilla/mux"
+
 	"customerapp/controller"
-	"customerapp/domain"
+	"customerapp/router"
 	"customerapp/store"
 )
 
 func main() {
-	controller := controller.CustomerController{
+	customerController := controller.CustomerController{
 		Store: store.NewMapStore(),
 	}
 
-	customer := domain.Customer{
-		ID:    "cust101",
-		Name:  "John",
-		Email: "john.doe@fake.com",
-	}
+	r := mux.NewRouter()
+	router.IntiailizeCustomerRouter(r, customerController)
 
-	duplicateCustomer := customer
-
-	controller.Add(customer)
-	controller.Add(duplicateCustomer)
-
-	duplicateCustomer.Name = "duplicate john"
-
-	controller.Change(customer.ID, duplicateCustomer)
-
-	controller.Change("unknown id", duplicateCustomer)
-
-	controller.FindById(customer.ID)
-
-	anotherCustomer := domain.Customer{
-		ID:    "cust102",
-		Name:  "Jane",
-		Email: "jane.doe@fake.com",
-	}
-
-	controller.Add(anotherCustomer)
-
-	controller.GetAll()
-
-	controller.Remove(customer.ID)
-	controller.GetAll()
+	fmt.Println("Listening...")
+	http.ListenAndServe(":8080", r)
 
 }

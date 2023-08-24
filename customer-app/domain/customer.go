@@ -3,7 +3,9 @@ package domain
 import "errors"
 
 type Customer struct {
-	ID, Name, Email string
+	ID    string `json:"id"`
+	Name  string `json:"name"`
+	Email string `json:"email"`
 }
 
 type CustomerStore interface {
