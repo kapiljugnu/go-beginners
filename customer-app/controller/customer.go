@@ -22,7 +22,7 @@ func (c CustomerController) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	err := c.Store.Create(cust)
-	if errors.Is(err, domain.CustomerIdAlreadyExist) {
+	if errors.Is(err, domain.ErrCustomerIdAlreadyExist) {
 		fmt.Println("CustomerIdAlreadyExist", err)
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
@@ -45,7 +45,7 @@ func (c CustomerController) Change(w http.ResponseWriter, r *http.Request) {
 	err := c.Store.Update(id, cust)
 	if err != nil {
 		LogError(err)
-		if errors.Is(err, domain.CustomerNotFound) {
+		if errors.Is(err, domain.ErrCustomerNotFound) {
 			http.Error(w, err.Error(), http.StatusNotFound)
 			return
 		}
@@ -61,7 +61,7 @@ func (c CustomerController) FindById(w http.ResponseWriter, r *http.Request) {
 	customer, err := c.Store.GetById(id)
 	if err != nil {
 		LogError(err)
-		if errors.Is(err, domain.CustomerNotFound) {
+		if errors.Is(err, domain.ErrCustomerNotFound) {
 			http.Error(w, err.Error(), http.StatusNotFound)
 			return
 		}
@@ -75,7 +75,7 @@ func (c CustomerController) GetAll(w http.ResponseWriter, r *http.Request) {
 	customers, err := c.Store.GetAll()
 	if err != nil {
 		LogError(err)
-		if errors.Is(err, domain.NoCustomerExists) {
+		if errors.Is(err, domain.ErrNoCustomerExists) {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
@@ -91,7 +91,7 @@ func (c CustomerController) Remove(w http.ResponseWriter, r *http.Request) {
 	err := c.Store.Delete(id)
 	if err != nil {
 		LogError(err)
-		if errors.Is(err, domain.CustomerNotFound) {
+		if errors.Is(err, domain.ErrCustomerNotFound) {
 			http.Error(w, err.Error(), http.StatusNotFound)
 			return
 		}

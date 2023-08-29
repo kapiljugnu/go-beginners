@@ -14,7 +14,7 @@ func NewMapStore() *MapStore {
 
 func (m MapStore) Create(c domain.Customer) error {
 	if _, ok := m.store[c.ID]; ok {
-		return domain.CustomerIdAlreadyExist
+		return domain.ErrCustomerIdAlreadyExist
 	}
 	m.store[c.ID] = c
 	return nil
@@ -22,7 +22,7 @@ func (m MapStore) Create(c domain.Customer) error {
 
 func (m MapStore) Update(id string, c domain.Customer) error {
 	if _, ok := m.store[id]; !ok {
-		return domain.CustomerNotFound
+		return domain.ErrCustomerNotFound
 	}
 	m.store[id] = c
 	return nil
@@ -30,7 +30,7 @@ func (m MapStore) Update(id string, c domain.Customer) error {
 
 func (m MapStore) Delete(id string) error {
 	if _, ok := m.store[id]; !ok {
-		return domain.CustomerNotFound
+		return domain.ErrCustomerNotFound
 	}
 	delete(m.store, id)
 	return nil
@@ -38,14 +38,14 @@ func (m MapStore) Delete(id string) error {
 
 func (m MapStore) GetById(id string) (domain.Customer, error) {
 	if _, ok := m.store[id]; !ok {
-		return domain.Customer{}, domain.CustomerNotFound
+		return domain.Customer{}, domain.ErrCustomerNotFound
 	}
 	return m.store[id], nil
 }
 
 func (m MapStore) GetAll() ([]domain.Customer, error) {
 	if len(m.store) == 0 {
-		return []domain.Customer{}, domain.NoCustomerExists
+		return []domain.Customer{}, domain.ErrNoCustomerExists
 	}
 	var customers []domain.Customer
 	for _, v := range m.store {
